@@ -1,0 +1,79 @@
+.feedWrapper {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 20px;
+  padding: 20px;
+    
+  min-height: 100vh;
+
+  /* container effekti */
+  max-width: 1200px;
+  margin: 0 auto;   /* ortada saxlayır */
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .feedWrapper {
+    grid-template-columns: 1fr 2fr; /* məsələn: solda user, ortada postlar */
+  }
+}
+
+@media (max-width: 992px) {
+  .feedWrapper {
+    grid-template-columns: 1fr; /* hamısı alt-alta */
+  }
+}
+.sidebarLeft,
+.sidebarRight {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.userCard {
+  text-align: center;
+  button {
+    background-color: #12579e;
+    border-color: #12579e;
+  }
+}
+
+.postCard {
+  background: white;
+
+  .comments {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    input {
+      border-radius: 6px;
+    }
+  }
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.socialCard {
+  h3 {
+    margin-bottom: 15px;
+    margin-top:2px;
+    text-align: center;
+  }
+
+  .socialLinks {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+      background-color: #12579e;
+      border-color: #12579e;
+      color: #fff;
+    }
+  }
+}

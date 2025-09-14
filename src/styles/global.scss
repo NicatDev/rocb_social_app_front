@@ -1,0 +1,12 @@
+$primary-color: #12579e;
+$secondary-color: #ff4081;
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loginWrapper {
+  position: relative; // static deyil, overlay üçün z-index işləyəcək
+  z-index: 0;         // overlay-in altında qalmaması üçün
+}

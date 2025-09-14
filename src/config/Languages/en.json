@@ -1,0 +1,56 @@
+{
+  "pageTitles": {
+  },
+  "modules": {
+  },
+  "error": {
+  },
+  "HeaderContent": {
+    "logout": "Log out"
+  },
+  "CommonContent": {
+    "delete": "Delete",
+    "users": "Users",
+    "search": "Search",
+    "select": "Select",
+    "selectAll": "Select all",
+    "clearFilter": "Clear filters",
+    "filter": "Filter",
+    "total": "Total",
+    "noData": "No data",
+    "items": "Items",
+    "goTo": "Go",
+    "toPage": "To page",
+    "page": "/ Page",
+    "active": "Active",
+    "deactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "save": "Save",
+    "saveContinue": "Save and continue",
+    "saveExit": "Save and exit",
+    "close": "Close",
+    "edit": "Edit",
+    "add": "Add",
+    "results": "Results",
+    "successCreate": "Successfully added!",
+    "successUpdate": "Successfully updated!",
+    "successDelete": "Successfully deleted!",
+    "400": "Operation failed",
+    "500": "Server error",
+    "404": "Operation not found",
+    "returnModules": "Return to modules",
+    "insertData":"Insert data"
+  },
+  "UserRegistration": {
+    "headerContent": {
+      "title": "User registration",
+      "insertButtonText": "New user",
+      "editTitle": "Edit"
+    },
+    "tableContent": {
+      "first_name": "First name",
+      "last_name": "Last name"
+    }
+  }
+}

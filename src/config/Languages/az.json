@@ -1,0 +1,57 @@
+{
+  "pageTitles": {
+  },
+  "modules": {
+  },
+  "error": {
+  },
+  "HeaderContent": {
+    "logout": "Çıxış et"
+  },
+  "CommonContent": {
+    "delete": "Sil",
+    "users": "İstifadəçilər",
+    "search": "Axtarış edin",
+    "select": "Seçim edin",
+    "selectAll": "Hamısını seç",
+    "clearFilter": "Filtirləri təmizlə",
+    "filter": "Filtrlə",
+    "total": "Toplam",
+    "noData": "Məlumat yoxdur",
+    "items": "Məlumat",
+    "goTo": "Get",
+    "toPage": "Səhifəyə",
+    "page": "/ Səhifə",
+    "active": "Aktiv",
+    "deactive": "Deaktiv",
+    "activate": "Aktiv et",
+    "deactivate": "Deaktiv et",
+    "save": "Yadda saxla",
+    "saveContinue": "Yadda saxla və davam et",
+    "saveExit": "Yadda saxla və çıx",
+    "close": "Bağla",
+    "edit": "Düzəliş et",
+    "add": "Əlavə et",
+    "results": "Nəticələr",
+    "successCreate": "Uğurla əlavə edildi!",
+    "successUpdate": "Uğurla dəyişdirildi!",
+    "successDelete": "Uğurla silindi!",
+    "400": "Uğursuz əməliyyat",
+    "500": "Server xətası",
+    "404": "Əməliyyat tapılmadı",
+    "returnModules": "Modullara qayıt",
+    "insertData":"Daxil edin"
+  },
+  "UserRegistration": {
+    "headerContent": {
+      "title": "İstifadəçi qeydiyyatı",
+      "insertButtonText": "Yeni istifadəçi",
+      "editTitle": "Düzəliş et"
+    },
+    "tableContent": {
+      "first_name": "Ad",
+      "last_name": "Soyad",
+      "username":"İstifadəçi adı"
+    }
+  }
+}

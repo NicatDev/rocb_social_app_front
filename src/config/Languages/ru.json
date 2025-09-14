@@ -1,0 +1,55 @@
+{
+  "pageTitles": {
+  },
+  "modules": {
+  },
+  "error": {
+  },
+  "HeaderContent": {
+    "logout": "Выйти"
+  },
+  "CommonContent": {
+    "delete": "Удалить",
+    "users": "Пользователи",
+    "search": "Поиск",
+    "select": "Выбрать",
+    "selectAll": "Выбрать все",
+    "clearFilter": "Очистить фильтры",
+    "filter": "Фильтр",
+    "total": "Итого",
+    "noData": "Нет данных",
+    "items": "Данные",
+    "goTo": "Перейти",
+    "toPage": "На страницу",
+    "page": "/ Страница",
+    "active": "Активен",
+    "deactive": "Неактивен",
+    "activate": "Активировать",
+    "deactivate": "Деактивировать",
+    "save": "Сохранить",
+    "saveContinue": "Сохранить и продолжить",
+    "saveExit": "Сохранить и выйти",
+    "close": "Закрыть",
+    "edit": "Редактировать",
+    "add": "Добавить",
+    "results": "Результаты",
+    "successCreate": "Успешно добавлено!",
+    "successUpdate": "Успешно обновлено!",
+    "successDelete": "Успешно удалено!",
+    "400": "Неудачная операция",
+    "500": "Ошибка сервера",
+    "404": "Операция не найдена",
+    "returnModules": "Вернуться к модулям"
+  },
+  "UserRegistration": {
+    "headerContent": {
+      "title": "Регистрация пользователя",
+      "insertButtonText": "Новый пользователь",
+      "editTitle": "Редактировать"
+    },
+    "tableContent": {
+      "first_name": "Имя",
+      "last_name": "Фамилия"
+    }
+  }
+}
