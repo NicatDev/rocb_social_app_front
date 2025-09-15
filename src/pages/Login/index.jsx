@@ -15,9 +15,10 @@ function LoginPage() {
     setLoading(true);
     try {
       const response = await API.Account.login(values);
-      if (response.data.access_token) {
-        localStorage.setItem("accessToken", response.data.access_token);
-        localStorage.setItem("refreshToken", response.data.refresh_token);
+        console.log(response?.data)
+      if (response?.data?.access) {
+        localStorage.setItem("accessToken", response.data.access);
+        localStorage.setItem("refreshToken", response.data?.refresh);
       }
       message.success("Login successful!");
       navigate("/");

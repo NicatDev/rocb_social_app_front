@@ -3,31 +3,67 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #001529;
+  background: #001529;
+  padding: 16px; // small devices üçün boşluq
+}
 
-  .registerBox {
-    background: #fff;
-    padding: 40px 30px;
+.registerBox {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px; // geniş form üçün
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.registerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #12579e;
+}
+
+.scrollArea {
+  max-height: 75vh; // ekranı aşmasın
+  overflow-y: auto;
+  padding-right: 8px;
+
+  // scroll dizayn
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+}
 
-    .registerTitle {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      text-align: center;
-    }
+.fullWidth {
+  width: 100%;
+}
 
-    .registerForm {
-      .ant-form-item {
-        margin-bottom: 20px;
-      }
+.registerButton {
+  width: 100%;
+  height: 45px;
+  border-radius: 8px !important;
+  font-weight: 600;
+  font-size: 16px;
+  background-color: #12579e !important;
+}
+.prevButton{
+      width: 100%;
+  height: 45px;
+  border-radius: 8px !important;
+  font-weight: 600;
+  font-size: 16px;
+}
+.steps {
+  margin: 0 0 18px 0;
 
-      .registerButton {
-        width: 100%;
-      }
-    }
+  @media (max-width: 768px) {
+    margin: 0 0 8px 0;
   }
 }

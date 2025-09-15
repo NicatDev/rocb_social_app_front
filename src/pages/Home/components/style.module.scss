@@ -15,6 +15,28 @@
 .postButton {
   background-color: #12579e !important; // sənin main color
   border-radius: 8px !important;
-  padding: 0 24px !important;
+  padding: 16px 24px !important;
   font-weight: 500;
+
+}
+.UploadIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* icon ilə yazı arası boşluq */
+  height: 40px; /* button hündürlüyü */
+  padding: 0 20px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  
+
+  img {
+    height: 24px; /* icon ölçüsü */
+  }
+
+  &:hover {
+    transform: scale(1.0); /* interaktiv hover effekti */
+    border: 1px solid #12579e;
+  }
 }

@@ -78,3 +78,12 @@ body, #root {
 .ant-notification {
   z-index: 9999 !important;
 }
+.ant-upload-list-item-name {
+  max-width: 70px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  cursor: pointer;
+}

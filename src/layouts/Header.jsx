@@ -31,8 +31,11 @@ function HeaderComponent() {
 
         {/* Right: User info */}
         <div className={styles.right}>
-          <span className={styles.username}>John Doe</span>
-          <Avatar size="small" src="https://i.pravatar.cc/150?img=3" />
+          <div>
+            <span className={styles.username}>John Doe</span>
+            <Avatar size="medium" src="https://i.pravatar.cc/150?img=3" />
+          </div>
+
           <LogoutOutlined className={styles.logout} />
         </div>
       </div>
