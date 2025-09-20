@@ -1,7 +1,10 @@
-.createPost {
+.createPost { 
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
 }
 
 .textarea {
@@ -12,31 +15,41 @@
   margin: 12px 0;
 }
 
-.postButton {
-  background-color: #12579e !important; // sənin main color
-  border-radius: 8px !important;
-  padding: 16px 24px !important;
-  font-weight: 500;
-
-}
 .UploadIcon {
   display: flex;
   align-items: center;
-  gap: 8px; /* icon ilə yazı arası boşluq */
-  height: 40px; /* button hündürlüyü */
+  gap: 8px;
+  height: 40px;
   padding: 0 20px;
   font-weight: 600;
   font-size: 16px;
   border-radius: 12px;
   cursor: pointer;
-  
 
   img {
-    height: 24px; /* icon ölçüsü */
+    height: 24px;
   }
 
   &:hover {
-    transform: scale(1.0); /* interaktiv hover effekti */
+    transform: scale(1.0);
     border: 1px solid #12579e;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 14px;
+    padding: 0 12px;
+    height: 36px;
+  }
+}
+
+.postButton {
+  background-color: #12579e !important;
+  border-radius: 8px !important;
+  padding: 16px 24px !important;
+  font-weight: 500;
+
+  @media (max-width: 576px) {
+    width: 100%;
+    padding: 12px 0;
   }
 }

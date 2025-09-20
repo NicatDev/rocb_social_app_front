@@ -1,56 +1,80 @@
+.main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .feedWrapper {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  display: flex;
   gap: 20px;
-  padding: 20px;
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
-}
+  flex-wrap: wrap; // mobil üçün alt satıra keçsin
 
-@media (max-width: 1200px) {
-  .feedWrapper {
-    grid-template-columns: 1fr 2fr;
+  .sidebarLeft,
+  .sidebarRight {
+    flex: 0 0 270px; // desktopda sabit 300px
+  }
+
+  .mainContentWrapper {
+    flex: 1; // qalan yer content
+    min-width: 0; // overflow problem üçün
+  }
+
+  @media (max-width: 576px) {
+    .sidebarLeft,
+    .sidebarRight,
+    .mainContentWrapper {
+      flex: 0 0 100%; // mobildə full width
+    }
   }
 }
 
-@media (max-width: 992px) {
-  .feedWrapper {
-    grid-template-columns: 1fr;
-  }
-}
-
-.sidebarLeft,
-.sidebarRight {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* Card və element tərtibatları */
+.userCard,
+.socialCard,
+.postCard {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .userCard {
   text-align: center;
+
   button {
     background-color: #12579e;
     border-color: #12579e;
     color: #fff;
   }
 }
+.userCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; // bütün elementləri mərkəzləşdirir
 
-.postCard {
-  background: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  .ant-typography,
+  button {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+  }
+}
 
-  .comments {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.socialLinks {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 
-    input {
-      border-radius: 6px;
-    }
+  button {
+    background-color: #12579e;
+    border-color: #12579e;
+    color: #fff;
   }
 }
 
@@ -60,59 +84,7 @@
   gap: 20px;
 }
 
-.imageWrapper {
-  margin-top: 12px;
-  img {
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.fileWrapper {
-  margin-top: 8px;
-  button {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #e6f0ff;
-      border-color: #12579e;
-    }
-  }
-}
-
-.socialCard {
-  h3 {
-    margin-bottom: 15px;
-    margin-top: 2px;
-    text-align: center;
-  }
-
-  .socialLinks {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-
-    button {
-      background-color: #12579e;
-      border-color: #12579e;
-      color: #fff;
-    }
-  }
-}
 .postCard {
-  background: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-
   .comments {
     display: none; // artıq Card footer istifadə olunacaq
   }
@@ -128,6 +100,9 @@
 
 .imageWrapper {
   margin-top: 12px;
+  display: flex;
+  justify-content: center;
+
   img {
     max-width: 100%;
     border-radius: 8px;
@@ -136,7 +111,8 @@
 }
 
 .fileWrapper {
-  margin-top: 12px; // daha aşağıya yapışdı
+  margin-top: 12px;
+
   button {
     display: inline-flex;
     align-items: center;
@@ -153,9 +129,18 @@
     }
   }
 }
-.commentDiv{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding:  10px 16px 0px;
+
+.commentDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px 0;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  margin-top: 50px;
 }

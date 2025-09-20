@@ -8,6 +8,7 @@ import { setNotificationApi } from './components/utils/notification';
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route  >
              <Route path="/register" element={<Register />} />
+          </Route>
+          <Route path="/profile" element={<MainLayout />} >
+             <Route index element={<Profile />} />
           </Route>
         </Routes>
       </Suspense>

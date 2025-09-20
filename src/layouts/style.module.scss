@@ -1,11 +1,7 @@
 .content {
   min-height: calc(100vh - 64px - 50px); // header + footer hündürlüyü çıxılır
   background-color: #f4f4f4;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
+  padding: 25px;
 }   
 
 

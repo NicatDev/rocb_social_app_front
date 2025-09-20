@@ -8,3 +8,4 @@ const Loader = () => (
   </Flex>
 );
 export default Loader;
+

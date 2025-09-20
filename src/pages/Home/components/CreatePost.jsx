@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import {
   Card,
   Input,
@@ -18,7 +18,7 @@ import { App as AntdApp } from "antd";
 
 const { TextArea } = Input;
 
-const CreatePost = ({afterChange}) => {
+const CreatePost = ({ afterChange }) => {
   const [content, setContent] = useState("");
   const [fileList, setFileList] = useState([]);
   const [imageList, setImageList] = useState([]);
@@ -79,26 +79,20 @@ const CreatePost = ({afterChange}) => {
       );
 
       message.success("Post created successfully!");
-      console.log("✅ Post data:", data);
-
       setContent("");
       setFileList([]);
       setImageList([]);
-      afterChange()
+      afterChange();
     } catch (error) {
       console.error(error);
-
       if (error.response?.data) {
         const data = error.response.data;
-
-        // Flatten all errors into a single string
         const errors = Object.entries(data)
           .map(([field, msgs]) => {
             const messages = Array.isArray(msgs) ? msgs.join(", ") : msgs;
             return `${field}: ${messages}`;
           })
           .join("\n");
-
         message.error(errors || "Failed to create post!");
       } else {
         message.error("Failed to create post!");
@@ -120,16 +114,21 @@ const CreatePost = ({afterChange}) => {
 
       <Divider className={styles.divider} />
 
-      <Space style={{ justifyContent: "space-between", width: "100%" }}>
-        <Space>
+      <Space
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <Space style={{ gap: 12, flexWrap: "wrap" }}>
           <Upload
             showUploadList={{
               showPreviewIcon: true,
               showRemoveIcon: true,
-              renderItem: (file) => ({
-                ...file,
-                name: truncateFileName(file.name),
-              }),
+              renderItem: (file) => ({ ...file, name: truncateFileName(file.name) }),
             }}
             beforeUpload={() => false}
             fileList={fileList}
@@ -137,10 +136,7 @@ const CreatePost = ({afterChange}) => {
             maxCount={1}
             onPreview={handlePreview}
           >
-            <Button
-              className={styles.UploadIcon}
-              icon={<img src={fileIcon} alt="File" />}
-            >
+            <Button className={styles.UploadIcon} icon={<img src={fileIcon} alt="File" />}>
               File
             </Button>
           </Upload>
@@ -149,10 +145,7 @@ const CreatePost = ({afterChange}) => {
             showUploadList={{
               showPreviewIcon: true,
               showRemoveIcon: true,
-              renderItem: (file) => ({
-                ...file,
-                name: truncateFileName(file.name),
-              }),
+              renderItem: (file) => ({ ...file, name: truncateFileName(file.name) }),
             }}
             beforeUpload={() => false}
             fileList={imageList}
@@ -160,10 +153,7 @@ const CreatePost = ({afterChange}) => {
             maxCount={1}
             onPreview={handlePreview}
           >
-            <Button
-              className={styles.UploadIcon}
-              icon={<img src={mediaIcon} alt="Media" />}
-            >
+            <Button className={styles.UploadIcon} icon={<img src={mediaIcon} alt="Media" />}>
               Photo
             </Button>
           </Upload>
@@ -180,7 +170,6 @@ const CreatePost = ({afterChange}) => {
         </Button>
       </Space>
 
-      {/* Modal Preview */}
       <Modal
         open={previewOpen}
         title={previewTitle}
