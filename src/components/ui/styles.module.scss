@@ -8,7 +8,10 @@
 .commentInput {
   width: 100%;
   border-radius: 6px;
-
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
   @media (max-width: 576px) {
     font-size: 14px;
   }
@@ -85,4 +88,26 @@
 .divider{
     margin-top: 0px;
     margin-bottom:10px;
+}
+.likeButton {
+  padding: 10px;
+  font-size: 18px;
+  height: 40px;
+  color: #1677ff; // default gray
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0,0,0,0.25);
+  &:hover {
+    color: #1677ff; // blue on hover
+    background: none; // remove AntD hover background
+  }
+  &:focus,
+  &:active {
+    outline: none;       // remove focus outline
+    box-shadow: none;    // remove AntD active shadow
+  }
+  .anticon {
+    margin-right: 4px; // space between icon and count
+  }
+  
 }

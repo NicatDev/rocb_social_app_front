@@ -67,7 +67,7 @@ const CreatePost = ({ afterChange }) => {
         return;
       }
       setLoading(true);
-      const { data } = await axios.post(
+      await axios.post(
         "http://46.62.145.90:500/api/content/posts/",
         formData,
         {

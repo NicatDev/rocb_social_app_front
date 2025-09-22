@@ -1,37 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {
-  Avatar,
-  Button,
-  Card,
-  Typography,
-  message,
-} from "antd";
+import { Avatar, Button, Card, Typography } from "antd";
 import {
   UserOutlined,
   LinkedinOutlined,
   TwitterOutlined,
   InstagramOutlined,
-  FileOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import styles from "./style.module.scss";
 import CreatePost from "./components/CreatePost";
 import Post from "../../components/ui/Post";
-
+import { useNavigate } from "react-router-dom";
+import { App as AntdApp } from "antd";
 const { Title, Text } = Typography;
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState(null);
+  const { message } = AntdApp.useApp();
+  const navigate = useNavigate();
 
   const fetchPosts = async (
     url = "http://46.62.145.90:500/api/content/posts/"
   ) => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      message.error("You are not logged in!");
-      return;
+      navigate("/login");
     }
 
     try {
@@ -44,7 +39,9 @@ const Home = () => {
       setPosts((prev) => [...prev, ...data.results]);
       setNextPageUrl(data.next);
     } catch (error) {
-      console.error(error);
+      if (error.status == 403 || error.status == 401) {
+        navigate("/login");
+      }
       message.error("Failed to fetch posts!");
     } finally {
       setLoadingMore(false);

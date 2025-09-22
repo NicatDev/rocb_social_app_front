@@ -6,12 +6,12 @@ import {
   Input,
   Typography,
   Modal,
-  message,
   Image,
   List,
   Divider,
+    App as AntdApp,
 } from "antd";
-import { FileOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, FileOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
 
 const { Text } = Typography;
@@ -22,6 +22,49 @@ const Post = ({ post }) => {
   const [comments, setComments] = useState(post?.reviews || []); // local state for comments
   const [newComment, setNewComment] = useState(""); // input state
   const [loading, setLoading] = useState(false);
+  const [liked, setLiked] = useState(post?.liked_by_user);
+  const [likeCount, setLikeCount] = useState(post?.like_count);
+  const { message } = AntdApp.useApp();
+  
+ const toggleLike = async () => {
+  const previousLiked = liked;
+  const previousCount = likeCount;
+
+  // Optimistic UI update
+  setLiked(!liked);
+  setLikeCount(likeCount + (liked ? -1 : 1));
+
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    if (!previousLiked) {
+      // Like
+      const response = await axios.post(
+        "http://46.62.145.90:500/api/content/likes/",
+        { post: post.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLiked(response.data.id); // save like id
+      message.success("Liked successfully");
+    } else {
+      // Unlike
+      if (!liked) return; // safety
+      await axios.delete(
+        `http://46.62.145.90:500/api/content/likes/${liked}/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLiked(null); // clear like id
+      message.success("Unliked successfully");
+    }
+  } catch (error) {
+    console.error("Failed to toggle like", error);
+    message.error("Failed to toggle like");
+
+    // Revert UI on failure
+    setLiked(previousLiked);
+    setLikeCount(previousCount);
+  }
+};
 
   const formattedDate = useMemo(
     () => new Date(post.created_date).toLocaleString(),
@@ -131,24 +174,38 @@ const Post = ({ post }) => {
                 </Button>
               </div>
             )}
-
-            <Input
-              placeholder="Write a comment..."
-              className={styles.commentInput}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onPressEnter={handleSendComment} // Enter to send
-              disabled={loading}
-              suffix={
-                <Button
-                  type="link"
-                  onClick={handleSendComment}
-                  loading={loading}
-                >
-                  Send
-                </Button>
-              }
-            />
+            <div className={styles.commentInput}>
+              <Button
+                type="secondary"
+                className={styles.likeButton}
+                icon={
+                  liked ? (
+                    <HeartFilled style={{ color: "#1677ff" }} />
+                  ) : (
+                    <HeartOutlined />
+                  )
+                }
+                onClick={toggleLike}
+              >
+                <Text type="secondary">{likeCount}</Text>
+              </Button>
+              <Input
+                placeholder="Write a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onPressEnter={handleSendComment} // Enter to send
+                disabled={loading}
+                suffix={
+                  <Button
+                    type="link"
+                    onClick={handleSendComment}
+                    loading={loading}
+                  >
+                    Send
+                  </Button>
+                }
+              />
+            </div>
           </div>,
         ]}
       >

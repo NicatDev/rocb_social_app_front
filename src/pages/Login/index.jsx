@@ -1,33 +1,10 @@
-import { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { App as AntdApp } from "antd";
 import styles from "./style.module.scss";
-import API from "@/api";
-import { useNavigate } from "react-router-dom";
-import { Loader } from "../../components/ui";
+import { useAuth } from "../../context/AuthContext";
 
 function LoginPage() {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { message } = AntdApp.useApp(); 
 
-  const onFinish = async (values) => {
-    setLoading(true);
-    try {
-      const response = await API.Account.login(values);
-        console.log(response?.data)
-      if (response?.data?.access) {
-        localStorage.setItem("accessToken", response.data.access);
-        localStorage.setItem("refreshToken", response.data?.refresh);
-      }
-      message.success("Login successful!");
-      navigate("/");
-    } catch (error) {
-      message.error(error.response.data.detail); // Artıq işləməlidir
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { onFinish } = useAuth();
 
   return (
     <div className={styles.loginWrapper}>

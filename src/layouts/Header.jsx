@@ -5,9 +5,11 @@ import Logo from "../assets/logo.png";
 import Home from "../assets/home.svg";
 import User from "../assets/user.svg";
 import styles from "./style.module.scss";
+import { useAuth } from "../context/AuthContext";
+
 
 function HeaderComponent() {
-  const location = useLocation();
+    const { profile, logout } = useAuth();
 
   return (
     <header className={styles.header}>
@@ -24,7 +26,7 @@ function HeaderComponent() {
               <img src={Home} alt="Home" style={{ width: 34, height: 34 }} />
             </Link>
             <Link to="/profile" className={styles.profileLink}>
-              <img src={User} alt="Home" style={{ width: 34, height: 34 }} />
+              <img src={User} alt="Profile" style={{ width: 34, height: 34 }} />
             </Link>
           </div>
         </div>
@@ -32,11 +34,11 @@ function HeaderComponent() {
         {/* Right: User info */}
         <div className={styles.right}>
           <div>
-            <span className={styles.username}>John Doe</span>
-            <Avatar size="medium" src="https://i.pravatar.cc/150?img=3" />
+            <span className={styles.username}>{profile?.first_name} {profile?.last_name}</span>
+            <Avatar style={{border:'1px solid #d9d9d9'}} size="medium" src={profile?.profile_picture} />
           </div>
 
-          <LogoutOutlined className={styles.logout} />
+          <LogoutOutlined onClick={logout} className={styles.logout} />
         </div>
       </div>
     </header>

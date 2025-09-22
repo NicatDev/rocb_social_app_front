@@ -103,6 +103,11 @@
     color: #fff;
     display: none;
     cursor: pointer;
+    display: flex;
+    width: 20px;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
   }
 
   &:hover .editIcon {

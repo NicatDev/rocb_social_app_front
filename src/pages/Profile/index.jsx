@@ -14,9 +14,11 @@ import { EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import styles from "./style.module.scss";
 import Post from "../../components/ui/Post";
+import { useAuth } from "../../context/AuthContext";
+
 
 const ProfilePage = () => {
-  const [profile, setProfile] = useState(null);
+  const { profile, setProfile, fetchProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -24,27 +26,6 @@ const ProfilePage = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    setLoading(true);
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      const res = await axios.get(
-        "http://46.62.145.90:500/api/account/profile/",
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      const profileData = res.data[0];
-      setProfile(profileData);
-      fetchPosts("http://46.62.145.90:500/api/content/posts/?own=true");
-    } catch (err) {
-      message.error("Failed to fetch profile data");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchPosts = async (url) => {
     if (!url) return;
@@ -62,6 +43,11 @@ const ProfilePage = () => {
       setPostsLoading(false);
     }
   };
+
+  useEffect(() => {
+      fetchPosts("http://46.62.145.90:500/api/content/posts/?own=true");
+  }, [profile])
+  
 
   const handleChange = (field, value) => {
     setProfile({ ...profile, [field]: value });
