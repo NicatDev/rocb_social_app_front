@@ -4,6 +4,7 @@ import { HomeOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Logo from "../assets/logo.png";
 import Home from "../assets/home.svg";
 import User from "../assets/user.svg";
+import Notify from "../assets/notifications.svg";
 import styles from "./style.module.scss";
 import { useAuth } from "../context/AuthContext";
 
@@ -27,6 +28,9 @@ function HeaderComponent() {
             </Link>
             <Link to="/profile" className={styles.profileLink}>
               <img src={User} alt="Profile" style={{ width: 34, height: 34 }} />
+            </Link>
+             <Link to="/notifications" className={styles.profileLink}>
+              <img src={Notify} alt="Notify" style={{ width: 34, height: 34 }} />
             </Link>
           </div>
         </div>

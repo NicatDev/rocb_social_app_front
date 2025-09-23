@@ -12,6 +12,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Profile = lazy(() => import("./pages/Profile"));
+const PostApprove = lazy(() => import("./pages/PostApprove"));
 
 function App() {
   return (
@@ -28,7 +29,9 @@ function App() {
                 <Route path="/" element={<MainLayout />}>
                   <Route index element={<Home />} />
                 </Route>
-
+                <Route path="/notifications" element={<MainLayout />}>
+                  <Route index element={<PostApprove />} />
+                </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 

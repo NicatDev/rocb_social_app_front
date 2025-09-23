@@ -1,0 +1,163 @@
+.approvePage {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0px 20px;
+  min-height: 100vh;
+}
+
+.postItem {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 20px !important;
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .contentWrapper {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .postInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+
+    .ant-typography {
+      margin: 0;
+    }
+
+    .postUser {
+      font-weight: 600;
+      color: #12579e;
+      font-size: 16px;
+    }
+
+    .postCreated {
+      font-size: 13px;
+      color: #777;
+    }
+  }
+}
+
+.avatar {
+  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.fileIcon {
+  font-size: 20px;
+  color: #12579e;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #0d3a70;
+  }
+}
+
+.ant-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.Modal {
+  max-height: 60vh !important;
+  overflow-y: scroll;
+}
+
+/* 📱 Responsiv dizayn */
+@media (max-width: 768px) {
+  .postItem {
+    flex-direction: column; /* yan-yana yox, alt-alta */
+    align-items: flex-start;
+    padding: 14px 16px !important;
+
+    .contentWrapper {
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .postInfo {
+      flex: 1;
+    }
+
+    .actions {
+      margin-top: 12px;
+      justify-content: flex-end;
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      button,
+      a {
+        font-size: 18px;
+      }
+    }
+    .actions{
+        flex-direction: column;
+        gap:10px
+    }
+  }
+
+  .avatar {
+    width: 52px;
+    height: 52px;
+  }
+
+  .postInfo .postUser {
+    font-size: 14px;
+  }
+
+  .postInfo .postCreated {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .postItem {
+    .contentWrapper {
+      flex-direction: column; /* avatar yuxarıda, info aşağıda */
+      align-items: center;
+      text-align: center;
+    }
+
+    .actions {
+      justify-content: center;
+    }
+  }
+}
+.buttonDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
+
+}

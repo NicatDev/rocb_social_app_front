@@ -36,7 +36,14 @@ const Home = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      setPosts((prev) => [...prev, ...data.results]);
+      setPosts((prev) => {
+        const merged = [...prev, ...data.results];
+        const unique = merged.filter(
+          (post, index, self) =>
+            index === self.findIndex((p) => p.id === post.id)
+        );
+        return unique;
+      });
       setNextPageUrl(data.next);
     } catch (error) {
       if (error.status == 403 || error.status == 401) {

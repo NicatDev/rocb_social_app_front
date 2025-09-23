@@ -18,6 +18,7 @@ const { Text } = Typography;
 
 const Post = ({ post }) => {
   const [filePreview, setFilePreview] = useState(null);
+  const [moreContent, setMoreContent] = useState(false);
   const [visibleComments, setVisibleComments] = useState(1);
   const [comments, setComments] = useState(post?.reviews || []); // local state for comments
   const [newComment, setNewComment] = useState(""); // input state
@@ -71,7 +72,7 @@ const Post = ({ post }) => {
     [post.created_date]
   );
 
-  const truncateContent = (content, length = 100) =>
+  const truncateContent = (content, length = 300) =>
     content?.length > length ? `${content.slice(0, length)}...` : content || "";
 
   const handleFileClick = (fileUrl) => setFilePreview(fileUrl);
@@ -211,11 +212,14 @@ const Post = ({ post }) => {
       >
         <Text>
           {truncateContent(post.content)}
-          {post.content?.length > 100 && (
-            <Button type="link" onClick={() => message.info(post.content)}>
+          {post.content?.length > 300 && !moreContent && (
+            <Button type="link" style={{border:'none'}} onClick={() => setMoreContent(true)}>
               View More
             </Button>
           )}
+          {
+            post.content?.length < 300 || moreContent && post.content
+          }
         </Text>
 
         {/* Media */}
