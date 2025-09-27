@@ -13,7 +13,8 @@ import {
 } from "antd";
 import { HeartOutlined, HeartFilled, FileOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
-
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
 const Post = ({ post }) => {
@@ -109,6 +110,22 @@ const Post = ({ post }) => {
     }
   };
 
+  const { profile } = useAuth(); 
+  const navigate = useNavigate();
+
+  const handleProfileClick = (username) => {
+    if (username === profile.username) {
+      navigate("/profile");
+    } else {
+      navigate(`/profile/${username}`);
+    }
+  };
+
+  // `post` və ya `post.user` obyekti mövcud deyilsə, komponenti render etmə
+  if (!post || !post.user) {
+    return null;
+  }
+
   return (
     <>
       {/* File preview modal */}
@@ -131,7 +148,7 @@ const Post = ({ post }) => {
       <Card
         key={post.id}
         className={styles.postCard}
-        title={<Text strong>{post.user}</Text>}
+        title={<Text className={styles.username} strong onClick={()=>handleProfileClick(post?.user)}>{post.user}</Text>}
         extra={<Text type="secondary">{formattedDate}</Text>}
         actions={[
           <div className={styles.commentDiv} key="comments">
@@ -144,7 +161,7 @@ const Post = ({ post }) => {
               renderItem={(item) => (
                 <List.Item key={item.id} className={styles.commentBox}>
                   <List.Item.Meta
-                    title={<p className={styles.commentTitle}>{item?.user}</p>}
+                    title={<p className={styles.commentTitle} onClick={()=>handleProfileClick(item?.user)}>{item?.user}</p>}
                     description={item?.content}
                   />
                 </List.Item>

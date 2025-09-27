@@ -13,6 +13,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Profile = lazy(() => import("./pages/Profile"));
 const PostApprove = lazy(() => import("./pages/PostApprove"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
 
 function App() {
   return (
@@ -34,6 +35,9 @@ function App() {
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/profile/:username" element={<MainLayout />}>
+                  <Route index element={<UserProfile />} />
+                </Route>
 
                 {/* Protected Route */}
                 <Route element={<ProtectedRoute />}>

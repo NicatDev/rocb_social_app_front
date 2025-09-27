@@ -87,3 +87,6 @@ body, #root {
   vertical-align: middle;
   cursor: pointer;
 }
+.ant-popover-inner-content {
+    padding: 14px 19px 14px 14px !important;
+}
