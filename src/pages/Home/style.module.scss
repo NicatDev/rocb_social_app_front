@@ -15,7 +15,7 @@
 
   .sidebarLeft,
   .sidebarRight {
-    flex: 0 0 270px; // desktopda sabit 300px
+    flex: 0 0 270px; // desktopda sabit 270px
   }
 
   .mainContentWrapper {
@@ -23,12 +23,23 @@
     min-width: 0; // overflow problem üçün
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 992px) {
+    .sidebarLeft,
+    .sidebarRight {
+      flex: 0 0 250px;
+    }
+  }
+
+  @media (max-width: 768px) {
     .sidebarLeft,
     .sidebarRight,
     .mainContentWrapper {
-      flex: 0 0 100%; // mobildə full width
+      flex: 0 0 100%; // tablet və mobil full width
     }
+  }
+
+  @media (max-width: 576px) {
+    gap: 10px;
   }
 }
 
@@ -45,18 +56,16 @@
 
 .userCard {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   button {
     background-color: #12579e;
     border-color: #12579e;
     color: #fff;
   }
-}
-.userCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; // bütün elementləri mərkəzləşdirir
 
   .ant-typography,
   button {

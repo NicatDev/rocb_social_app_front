@@ -6,12 +6,14 @@ import {
   TwitterOutlined,
   InstagramOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
+import axiosInstance from "@/config/Axios";
 import styles from "./style.module.scss";
 import CreatePost from "./components/CreatePost";
 import Post from "../../components/ui/Post";
 import { useNavigate } from "react-router-dom";
 import { App as AntdApp } from "antd";
+import { useAuth } from "../../context/AuthContext";
+
 const { Title, Text } = Typography;
 
 const Home = () => {
@@ -19,22 +21,22 @@ const Home = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
+  const { profile } = useAuth();
   const navigate = useNavigate();
 
   const fetchPosts = async (
-    url = "http://46.62.145.90:500/api/content/posts/"
+    url = "/content/posts/"
   ) => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       navigate("/login");
+      return;
     }
 
     try {
       if (posts.length > 0) setLoadingMore(true);
 
-      const { data } = await axios.get(url, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const { data } = await axiosInstance.get(url);
 
       setPosts((prev) => {
         const merged = [...prev, ...data.results];
@@ -46,9 +48,6 @@ const Home = () => {
       });
       setNextPageUrl(data.next);
     } catch (error) {
-      if (error.status == 403 || error.status == 401) {
-        navigate("/login");
-      }
       message.error("Failed to fetch posts!");
     } finally {
       setLoadingMore(false);
@@ -70,16 +69,16 @@ const Home = () => {
         {/* Left Sidebar */}
         <div className={styles.sidebarLeft}>
           <Card className={styles.userCard}>
-            <Avatar size={64} icon={<UserOutlined />} />
+            <Avatar size={80} src={profile?.profile_picture} />
+            <div>
+              <Text type="secondary">{profile?.view_count} views</Text>
+            </div>
             <Title level={4} style={{ marginTop: 8, marginBottom: 4 }}>
-              John Doe
+              {profile?.first_name} {profile?.last_name}
             </Title>
             <Text type="secondary" style={{ fontSize: 14 }}>
-              Frontend Developer
+              {profile?.position}
             </Text>
-            <Button type="primary" style={{ marginTop: 8 }}>
-              Follow
-            </Button>
           </Card>
         </div>
 

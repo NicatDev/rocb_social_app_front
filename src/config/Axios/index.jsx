@@ -1,51 +1,60 @@
-import { message } from "antd";
 import axios from "axios";
-import API from "@/api";
 
-message.config({
-  top: 100,
-  duration: 3,
-  maxCount: 5,
+const API_URL = "http://46.62.145.90:500/api";
+
+// Axios instance
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-axios.defaults.baseURL = "http://46.62.145.90:500/api/";
-axios.defaults.headers["Content-Type"] = "application/json";
-axios.defaults.headers["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.headers["Accept-Language"] =
-  localStorage.getItem("language") || import.meta.env.VITE_LANGUAGE;
-axios.defaults.timeout = 60 * 1000;
-
-let isRefreshing = false;
-let failedRequests = [];
-
-// --- REQUEST INTERCEPTOR ---
-axios.interceptors.request.use(
-  (req) => {
+// Request interceptor → hər request-ə access token əlavə edirik
+axiosInstance.interceptors.request.use(
+  (config) => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      req.headers["authorization"] = `Bearer ${accessToken}`;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-    return req;
+    return config;
   },
-  (err) => Promise.reject(err)
+  (error) => Promise.reject(error)
 );
 
-// --- RESPONSE INTERCEPTOR ---
-axios.interceptors.response.use(
+// Flag – sonsuz loop-un qarşısını almaq üçün
+let isRefreshing = false;
+let failedQueue = [];
+
+// Queue-da saxlayırıq
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
+// Response interceptor → əgər 401 və ya 403 gəlsə refresh edirik
+axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const status = error.response?.status;
 
-    // Refresh prosesi
-    if (status === 403 && !originalRequest._retry) {
+    // Əgər 401 və ya 403-dür və retry olunmayıb
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedRequests.push({ resolve, reject });
+        // refresh prosesi davam edir, queue-ya atırıq
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axios(originalRequest);
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return axiosInstance(originalRequest);
           })
           .catch((err) => Promise.reject(err));
       }
@@ -53,51 +62,38 @@ axios.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refresh_token = localStorage.getItem("refreshToken");
-      const token = localStorage.getItem("accessToken");
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (!refreshToken) {
+          throw new Error("No refresh token found");
+        }
 
-      if (!refresh_token) {
-        localStorage.clear();
+        // Refresh API çağırırıq
+        const res = await axios.post(`${API_URL}/account/token/refresh/`, {
+          refresh: refreshToken,
+        });
+
+        const newAccessToken = res.data.access;
+        localStorage.setItem("accessToken", newAccessToken);
+
+        axiosInstance.defaults.headers["Authorization"] = "Bearer " + newAccessToken;
+        processQueue(null, newAccessToken);
+
+        return axiosInstance(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        // refresh də uğursuz olsa → logout
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         window.location.href = "/login";
-        return Promise.reject(error);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
       }
-
-      return new Promise((resolve, reject) => {
-        API.Auth.refreshToken({ token, refresh_token })
-          .then(({ data }) => {
-            const {
-              access_token: newAccessToken,
-              refresh_token: newRefreshToken,
-            } = data;
-
-            localStorage.setItem("accessToken", newAccessToken);
-            localStorage.setItem("refreshToken", newRefreshToken);
-
-            axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-            // pending requestləri burda resolve elə
-            failedRequests.forEach((req) => req.resolve(newAccessToken));
-            failedRequests = [];
-
-            resolve(axios(originalRequest));
-          })
-          .catch((err) => {
-            console.error("🔑 Refresh Token Failed:", err);
-            localStorage.clear();
-            window.location.href = "/login";
-            failedRequests.forEach((req) => req.reject(err));
-            failedRequests = [];
-            reject(err);
-          })
-          .finally(() => {
-            isRefreshing = false;
-          });
-      });
     }
 
     return Promise.reject(error);
   }
 );
 
-export default axios;
+export default axiosInstance;

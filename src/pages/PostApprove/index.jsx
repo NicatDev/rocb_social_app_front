@@ -14,10 +14,9 @@ import {
   FileOutlined,
   CheckOutlined,
   CloseOutlined,
-  DownOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
+import axiosInstance from "@/config/Axios";
 import styles from "./style.module.scss";
 
 const { Text, Title } = Typography;
@@ -34,16 +33,11 @@ const PostApprovePage = () => {
     setSelectedImage(src);
     setImageModalVisible(true);
   };
-  const fetchPosts = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
 
+  const fetchPosts = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(
-        "http://46.62.145.90:500/api/content/posts/?is_active=null",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const { data } = await axiosInstance.get("/content/posts/?is_active=null");
       setPosts(data.results || []);
     } catch (error) {
       console.error(error);
@@ -58,16 +52,11 @@ const PostApprovePage = () => {
   }, []);
 
   const handleAction = async (id, action) => {
-    const token = localStorage.getItem("accessToken");
     try {
-      await axios.patch(
-        `http://46.62.145.90:500/api/content/posts/${id}/`,
-        { is_active: action === "approve" },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      message.success(
-        action === "approve" ? "Post approved!" : "Post rejected!"
-      );
+      await axiosInstance.patch(`/content/posts/${id}/`, {
+        is_active: action === "approve",
+      });
+      message.success(action === "approve" ? "Post approved!" : "Post rejected!");
       setPosts((prev) => prev.filter((p) => p.id !== id));
     } catch (error) {
       console.error(error);
@@ -105,12 +94,13 @@ const PostApprovePage = () => {
                       size={64}
                       className={styles.avatar}
                       onClick={() => showImageModal(post.image)}
-                      style={{ cursor: "pointer" }} // kliklənə bilsin deyə
-                    /> 
-                  
+                      style={{ cursor: "pointer" }}
+                    />
                   )}
                   <div className={styles.postInfo}>
-                    <Text className="postUser">{post.user}   {post.id}</Text>
+                    <Text className="postUser">
+                      {post.user} {post.id}
+                    </Text>
                     <Text className="postCreated">
                       {new Date(post.created_date).toLocaleDateString("en-US", {
                         day: "2-digit",
@@ -125,7 +115,6 @@ const PostApprovePage = () => {
 
                 <div className={styles.actions}>
                   <div className={styles.buttonDiv}>
-                    {" "}
                     {post.file && (
                       <Tooltip title="Open file">
                         <a
@@ -155,7 +144,6 @@ const PostApprovePage = () => {
                     </Tooltip>
                   </div>
                   <div className={styles.buttonDiv}>
-                    {" "}
                     <Popconfirm
                       title="Reject this post?"
                       onConfirm={() => handleAction(post.id, "reject")}
@@ -166,12 +154,8 @@ const PostApprovePage = () => {
                       title="Approve this post?"
                       onConfirm={() => handleAction(post.id, "approve")}
                     >
-                      <Button
-                        type="primary"
-                        shape="circle"
-                        icon={<CheckOutlined />}
-                      />
-                    </Popconfirm>{" "}
+                      <Button type="primary" shape="circle" icon={<CheckOutlined />} />
+                    </Popconfirm>
                   </div>
                 </div>
               </List.Item>
@@ -195,6 +179,7 @@ const PostApprovePage = () => {
           style={{ whiteSpace: "pre-wrap" }}
         />
       </Modal>
+
       {/* Image Modal */}
       <Modal
         open={imageModalVisible}

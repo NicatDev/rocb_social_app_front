@@ -9,6 +9,9 @@
   padding: 10px 0;
   background-color: #f0f2f5;
   color: #555;
+  span{
+    color:black
+  }
 }
 
 .header {
@@ -122,4 +125,76 @@
 
 .profileLink:hover::after, .profileLink.active::after  {
   transform: scaleX(1);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 64px;
+  background-color: #ffffff;
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .left img {
+    width: 44px;
+    height: 55px;
+  }
+
+  .middle {
+    display: flex;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      display: none; // mobilde gizlə
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .desktopUser {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      @media (max-width: 768px) {
+        display: none; // mobildə gizlə
+      }
+    }
+
+    .mobileMenuButton {
+      display: none;
+      @media (max-width: 768px) {
+        display: block; // mobildə göstər
+      }
+    }
+  }
+}
+
+.profileLink {
+  text-decoration: none;
+  color: #083d74;
+  font-weight: 500;
+}
+
+.profileLink.active {
+  color: #12579e;
+}
+
+.drawerLink {
+  display: block;
+  padding: 10px 0;
+  color: #083d74;
+  font-weight: 500;
+  text-decoration: none;
 }

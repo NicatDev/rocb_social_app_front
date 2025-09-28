@@ -1,14 +1,17 @@
-import { NavLink } from "react-router-dom";
-import { Menu, Avatar } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
+import { NavLink } from "react-router-dom"; 
+import { Avatar, Drawer, Button } from "antd";
+import { LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import Logo from "../assets/logo.png";
-import Home from "../assets/home.svg";
-import Notify from "../assets/notifications.svg";
 import styles from "./style.module.scss";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 function HeaderComponent() {
   const { profile, logout } = useAuth();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const showDrawer = () => setDrawerVisible(true);
+  const closeDrawer = () => setDrawerVisible(false);
 
   return (
     <header className={styles.header}>
@@ -20,42 +23,62 @@ function HeaderComponent() {
 
         {/* Middle: Menu */}
         <div className={styles.middle}>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink
-            }
-          >
-            <img src={Home} alt="Home" style={{ width: 34, height: 34 }} />
+          {/* Desktop Links */}
+          <NavLink to="/" className={({ isActive }) => isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink}>
+            Home
           </NavLink>
-
-          <NavLink
-            to="/notifications"
-            className={({ isActive }) =>
-              isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink
-            }
-          >
-            <img src={Notify} alt="Notify" style={{ width: 34, height: 34 }} />
+          <NavLink to="/notifications" className={({ isActive }) => isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink}>
+            Notifications
           </NavLink>
         </div>
 
-        {/* Right: User info */}
+        {/* Right: User info + Hamburger */}
         <div className={styles.right}>
-          <NavLink to="/profile" className={styles.profile}>
-            <div>
-              <span className={styles.username}>
-                {profile?.first_name} {profile?.last_name}
-              </span>
-              <Avatar
-                style={{ border: "1px solid #d9d9d9" }}
-                size="medium"
-                src={profile?.profile_picture}
-              />
-            </div>
-          </NavLink>
+          <div className={styles.desktopUser}>
+            <NavLink to="/profile" className={styles.profile}>
+              <div>
+                <span className={styles.username}>
+                  {profile?.first_name} {profile?.last_name}
+                </span>
+                <Avatar
+                  style={{ border: "1px solid #d9d9d9" }}
+                  size="medium"
+                  src={profile?.profile_picture}
+                />
+              </div>
+            </NavLink>
 
-          <LogoutOutlined onClick={logout} className={styles.logout} />
+            <LogoutOutlined onClick={logout} className={styles.logout} />
+          </div>
+
+          {/* Mobile Hamburger */}
+          <Button
+            className={styles.mobileMenuButton}
+            icon={<MenuOutlined />}
+            onClick={showDrawer}
+          />
         </div>
+
+        {/* Drawer for Mobile */}
+        <Drawer
+          title="Menu"
+          placement="right"
+          onClose={closeDrawer}
+          open={drawerVisible}
+        >
+          <NavLink to="/" className={styles.drawerLink} onClick={closeDrawer}>
+            Home
+          </NavLink>
+          <NavLink to="/notifications" className={styles.drawerLink} onClick={closeDrawer}>
+            Notifications
+          </NavLink>
+          <NavLink to="/profile" className={styles.drawerLink} onClick={closeDrawer}>
+            Profile
+          </NavLink>
+          <Button type="text" icon={<LogoutOutlined />} onClick={logout}>
+            Logout
+          </Button>
+        </Drawer>
       </div>
     </header>
   );

@@ -11,11 +11,10 @@ import {
   Col,
 } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import axios from "axios";
+import axiosInstance from "@/config/Axios";
 import styles from "./style.module.scss";
 import Post from "../../components/ui/Post";
 import { useAuth } from "../../context/AuthContext";
-
 
 const ProfilePage = () => {
   const { profile, setProfile, fetchProfile } = useAuth();
@@ -26,16 +25,18 @@ const ProfilePage = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
 
-
   const fetchPosts = async (url) => {
     if (!url) return;
     setPostsLoading(true);
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+      const res = await axiosInstance.get(url);
+      setPosts((prev) => {
+        const merged = [...prev, ...res?.data?.results];
+        const unique = merged.filter(
+          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+        );
+        return unique;
       });
-      setPosts((prev) => [...prev, ...res?.data?.results]);
       setNextPageUrl(res?.data?.next);
     } catch (err) {
       message.error("Failed to fetch posts");
@@ -45,9 +46,8 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-      fetchPosts("http://46.62.145.90:500/api/content/posts/?own=true");
-  }, [profile])
-  
+    fetchPosts("/content/posts/?own=true");
+  }, [profile]);
 
   const handleChange = (field, value) => {
     setProfile({ ...profile, [field]: value });
@@ -56,22 +56,13 @@ const ProfilePage = () => {
   const handleFileChange = async (file) => {
     if (!file) return;
 
-    const accessToken = localStorage.getItem("accessToken");
     const formData = new FormData();
     formData.append("profile_picture", file);
 
     try {
-      // Sadəcə şəkli patch ilə göndəririk
-      await axios.patch(
-        `http://46.62.145.90:500/api/account/profile/${profile.id}/`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axiosInstance.patch(`/account/profile/${profile.id}/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -88,10 +79,7 @@ const ProfilePage = () => {
   const handleUpdate = async () => {
     setUpdating(true);
     try {
-      const accessToken = localStorage.getItem("accessToken");
       const formData = new FormData();
-
-      // Bütün inputları göndəririk ki ModelViewSet PUT tələbini qarşılasın
       const fields = [
         "email",
         "first_name",
@@ -102,21 +90,11 @@ const ProfilePage = () => {
         "organization",
         "position",
       ];
+      fields.forEach((field) => formData.append(field, profile[field] || ""));
 
-      fields.forEach((field) => {
-        formData.append(field, profile[field] || "");
+      await axiosInstance.put(`/account/profile/${profile.id}/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      await axios.put(
-        `http://46.62.145.90:500/api/account/profile/${profile.id}/`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
       fetchProfile();
       message.success("Profile updated successfully");
@@ -203,7 +181,7 @@ const ProfilePage = () => {
             <div className={styles.avatarContainer}>
               <Avatar
                 src={profile.profile_picture}
-                size={100}
+                size={80}
                 style={{ cursor: "pointer" }}
                 onClick={() => document.getElementById("avatarInput").click()}
               />

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import axios from "axios";
+import axiosInstance from "@/config/Axios";
 import {
   Button,
   Card,
@@ -9,7 +9,7 @@ import {
   Image,
   List,
   Divider,
-    App as AntdApp,
+  App as AntdApp,
 } from "antd";
 import { HeartOutlined, HeartFilled, FileOutlined } from "@ant-design/icons";
 import styles from "./styles.module.scss";
@@ -21,52 +21,40 @@ const Post = ({ post }) => {
   const [filePreview, setFilePreview] = useState(null);
   const [moreContent, setMoreContent] = useState(false);
   const [visibleComments, setVisibleComments] = useState(1);
-  const [comments, setComments] = useState(post?.reviews || []); // local state for comments
-  const [newComment, setNewComment] = useState(""); // input state
+  const [comments, setComments] = useState(post?.reviews || []);
+  const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [liked, setLiked] = useState(post?.liked_by_user);
   const [likeCount, setLikeCount] = useState(post?.like_count);
   const { message } = AntdApp.useApp();
-  
- const toggleLike = async () => {
-  const previousLiked = liked;
-  const previousCount = likeCount;
+  const { profile } = useAuth();
+  const navigate = useNavigate();
 
-  // Optimistic UI update
-  setLiked(!liked);
-  setLikeCount(likeCount + (liked ? -1 : 1));
+  const toggleLike = async () => {
+    const previousLiked = liked;
+    const previousCount = likeCount;
 
-  try {
-    const token = localStorage.getItem("accessToken");
+    setLiked(!liked);
+    setLikeCount(likeCount + (liked ? -1 : 1));
 
-    if (!previousLiked) {
-      // Like
-      const response = await axios.post(
-        "http://46.62.145.90:500/api/content/likes/",
-        { post: post.id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setLiked(response.data.id); // save like id
-      message.success("Liked successfully");
-    } else {
-      // Unlike
-      if (!liked) return; // safety
-      await axios.delete(
-        `http://46.62.145.90:500/api/content/likes/${liked}/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setLiked(null); // clear like id
-      message.success("Unliked successfully");
+    try {
+      if (!previousLiked) {
+        const response = await axiosInstance.post("/content/likes/", { post: post.id });
+        setLiked(response.data.id);
+        message.success("Liked successfully");
+      } else {
+        if (!liked) return;
+        await axiosInstance.delete(`/content/likes/${liked}/`);
+        setLiked(null);
+        message.success("Unliked successfully");
+      }
+    } catch (error) {
+      console.error("Failed to toggle like", error);
+      message.error("Failed to toggle like");
+      setLiked(previousLiked);
+      setLikeCount(previousCount);
     }
-  } catch (error) {
-    console.error("Failed to toggle like", error);
-    message.error("Failed to toggle like");
-
-    // Revert UI on failure
-    setLiked(previousLiked);
-    setLikeCount(previousCount);
-  }
-};
+  };
 
   const formattedDate = useMemo(
     () => new Date(post.created_date).toLocaleString(),
@@ -83,21 +71,11 @@ const Post = ({ post }) => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://46.62.145.90:500/api/content/reviews/",
-        {
-          content: newComment,
-          post: post.id, // assuming backend needs post id
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.post("/content/reviews/", {
+        content: newComment,
+        post: post.id,
+      });
 
-      // Add new comment to local list
       setComments((prev) => [response.data, ...prev]);
       setVisibleComments((prev) => prev + 1);
       setNewComment("");
@@ -110,9 +88,6 @@ const Post = ({ post }) => {
     }
   };
 
-  const { profile } = useAuth(); 
-  const navigate = useNavigate();
-
   const handleProfileClick = (username) => {
     if (username === profile.username) {
       navigate("/profile");
@@ -121,14 +96,10 @@ const Post = ({ post }) => {
     }
   };
 
-  // `post` və ya `post.user` obyekti mövcud deyilsə, komponenti render etmə
-  if (!post || !post.user) {
-    return null;
-  }
+  if (!post || !post.user) return null;
 
   return (
     <>
-      {/* File preview modal */}
       <Modal
         className={styles.Modal}
         open={!!filePreview}
@@ -148,20 +119,33 @@ const Post = ({ post }) => {
       <Card
         key={post.id}
         className={styles.postCard}
-        title={<Text className={styles.username} strong onClick={()=>handleProfileClick(post?.user)}>{post.user}</Text>}
+        title={
+          <Text
+            className={styles.username}
+            strong
+            onClick={() => handleProfileClick(post?.user)}
+          >
+            {post.user}
+          </Text>
+        }
         extra={<Text type="secondary">{formattedDate}</Text>}
         actions={[
           <div className={styles.commentDiv} key="comments">
             <List
-              className={`${!comments.length && styles.noComment} ${
-                styles.commentList
-              }`}
+              className={`${!comments.length && styles.noComment} ${styles.commentList}`}
               itemLayout="horizontal"
               dataSource={comments.slice(0, visibleComments)}
               renderItem={(item) => (
                 <List.Item key={item.id} className={styles.commentBox}>
                   <List.Item.Meta
-                    title={<p className={styles.commentTitle} onClick={()=>handleProfileClick(item?.user)}>{item?.user}</p>}
+                    title={
+                      <p
+                        className={styles.commentTitle}
+                        onClick={() => handleProfileClick(item?.user)}
+                      >
+                        {item?.user}
+                      </p>
+                    }
                     description={item?.content}
                   />
                 </List.Item>
@@ -169,7 +153,7 @@ const Post = ({ post }) => {
             />
 
             <Divider
-              className={`${visibleComments.length > 1 && styles.noComment}  ${
+              className={`${visibleComments.length > 1 && styles.noComment} ${
                 styles?.divider
               }`}
             />
@@ -211,14 +195,10 @@ const Post = ({ post }) => {
                 placeholder="Write a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                onPressEnter={handleSendComment} // Enter to send
+                onPressEnter={handleSendComment}
                 disabled={loading}
                 suffix={
-                  <Button
-                    type="link"
-                    onClick={handleSendComment}
-                    loading={loading}
-                  >
+                  <Button type="link" onClick={handleSendComment} loading={loading}>
                     Send
                   </Button>
                 }
@@ -230,23 +210,23 @@ const Post = ({ post }) => {
         <Text>
           {truncateContent(post.content)}
           {post.content?.length > 300 && !moreContent && (
-            <Button type="link" style={{border:'none'}} onClick={() => setMoreContent(true)}>
+            <Button
+              type="link"
+              style={{ border: "none" }}
+              onClick={() => setMoreContent(true)}
+            >
               View More
             </Button>
           )}
-          {
-            post.content?.length < 300 || moreContent && post.content
-          }
+          {(post.content?.length < 300 || moreContent) && post.content}
         </Text>
 
-        {/* Media */}
         {post.image && (
           <div className={styles.imageWrapper}>
             <Image src={post.image} alt="Post media" className={styles.media} />
           </div>
         )}
 
-        {/* File */}
         {post.file && (
           <div className={styles.fileWrapper}>
             <Button
