@@ -198,3 +198,17 @@
   font-weight: 500;
   text-decoration: none;
 }
+.redText{
+  color:red;
+  padding:10px 0px;
+  display: flex;
+}
+.divider{
+  margin: 0px 0px;
+}
+.drawerBodyClass{
+ :global(.ant-drawer-body) {
+  margin: 0px 20px !important;
+  padding: 0px !important;
+}
+}

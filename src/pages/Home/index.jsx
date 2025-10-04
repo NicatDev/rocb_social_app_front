@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Card, Typography } from "antd";
+import { Avatar, Button, Card, Divider, List, Typography } from "antd";
 import {
   UserOutlined,
   LinkedinOutlined,
   TwitterOutlined,
   InstagramOutlined,
+  CommentOutlined,
+  LikeOutlined,
 } from "@ant-design/icons";
 import axiosInstance from "@/config/Axios";
 import styles from "./style.module.scss";
@@ -18,15 +20,33 @@ const { Title, Text } = Typography;
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [topPosts, setTopPosts] = useState([]);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
   const { profile } = useAuth();
   const navigate = useNavigate();
 
-  const fetchPosts = async (
-    url = "/content/posts/"
-  ) => {
+  const fetchTopPosts = async (url = "/content/top") => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (topPosts.length > 0) setLoadingMore(true);
+
+      const { data } = await axiosInstance.get(url);
+      setTopPosts(data);
+    } catch (error) {
+      message.error("Failed to fetch most liked posts!");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const fetchPosts = async (url = "/content/posts/") => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       navigate("/login");
@@ -56,6 +76,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
+    fetchTopPosts();
   }, []);
 
   const afterChange = () => {
@@ -80,6 +101,8 @@ const Home = () => {
               {profile?.position}
             </Text>
           </Card>
+
+        
         </div>
 
         {/* Main Content */}
@@ -118,6 +141,41 @@ const Home = () => {
               <Button shape="circle" icon={<LinkedinOutlined />} />
               <Button shape="circle" icon={<TwitterOutlined />} />
             </div>
+          </Card>
+            <Card className={styles.userCard}>
+            <Title level={4} style={{ margin: "0" }}>
+              Most liked
+            </Title>
+
+            <List
+              itemLayout="vertical"
+              size="large"
+              dataSource={topPosts}
+              renderItem={(item) => (
+                <List.Item key={item.title}>
+                  <div className={styles.listItem}>
+                    <div className={styles.postHeader}>
+                      <Avatar size={40} src={item?.image} />
+                      <div className={styles.name}>
+                        {item?.first_name} {item?.last_name}
+                        <div className={styles.likeComment}>
+                          <div>
+                            <LikeOutlined />
+                            <span>&nbsp;{item?.like_count}</span>
+                          </div>
+                          <div>
+                            <CommentOutlined />
+                            <span>&nbsp;{item?.review_count}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={styles.content}>{item?.content}</div>
+                  </div>
+                </List.Item>
+              )}
+            />
           </Card>
         </div>
       </div>

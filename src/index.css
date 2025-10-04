@@ -90,3 +90,6 @@ body, #root {
 .ant-popover-inner-content {
     padding: 14px 19px 14px 14px !important;
 }
+.ant-card-body{
+  width: 100%;
+}

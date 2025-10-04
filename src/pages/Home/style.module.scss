@@ -4,6 +4,12 @@
   width: 100%;
 }
 
+.sidebarRight{
+  gap:10px;
+  display: flex;
+  flex-direction: column;
+}
+
 .feedWrapper {
   display: flex;
   gap: 20px;
@@ -12,7 +18,7 @@
   margin: 0 auto;
   width: 100%;
   flex-wrap: wrap; // mobil üçün alt satıra keçsin
-
+  gap:20px;
   .sidebarLeft,
   .sidebarRight {
     flex: 0 0 270px; // desktopda sabit 270px
@@ -29,7 +35,12 @@
       flex: 0 0 250px;
     }
   }
-
+@media (max-width: 922px) {
+    .sidebarLeft,
+    .sidebarRight {
+      flex: 0 0 100%;
+    }
+  }
   @media (max-width: 768px) {
     .sidebarLeft,
     .sidebarRight,
@@ -60,6 +71,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 0px !important;
 
   button {
     background-color: #12579e;
@@ -152,4 +164,71 @@
   align-items: center;
   height: 80vh;
   margin-top: 50px;
+}
+.listItem {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4em;
+  margin-top: 0;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* max 3 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.likeComment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: space-around;
+}
+
+.divider {
+  padding: 0 !important;
+  margin: 14px 0 7px !important;
+}
+
+.image {
+  width: 80px;
+}
+
+@media (max-width: 1000px) {
+  .postHeader{
+    gap:20px;
+    justify-content: center;
+  }
 }

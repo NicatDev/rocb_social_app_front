@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom"; 
-import { Avatar, Drawer, Button } from "antd";
+import { NavLink } from "react-router-dom";
+import { Avatar, Drawer, Button, Divider } from "antd";
 import { LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import Logo from "../assets/logo.png";
 import styles from "./style.module.scss";
@@ -12,7 +12,7 @@ function HeaderComponent() {
 
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
-
+  console.log(profile);
   return (
     <header className={styles.header}>
       <div className={styles.nav}>
@@ -24,11 +24,38 @@ function HeaderComponent() {
         {/* Middle: Menu */}
         <div className={styles.middle}>
           {/* Desktop Links */}
-          <NavLink to="/" className={({ isActive }) => isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? `${styles.profileLink} ${styles.active}`
+                : styles.profileLink
+            }
+          >
             Home
           </NavLink>
-          <NavLink to="/notifications" className={({ isActive }) => isActive ? `${styles.profileLink} ${styles.active}` : styles.profileLink}>
-            Notifications
+          {profile?.is_superuser && (
+            <NavLink
+              to="/notifications"
+              className={({ isActive }) =>
+                isActive
+                  ? `${styles.profileLink} ${styles.active}`
+                  : styles.profileLink
+              }
+            >
+              Notifications
+            </NavLink>
+          )}
+
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              isActive
+                ? `${styles.profileLink} ${styles.active}`
+                : styles.profileLink
+            }
+          >
+            Profile
           </NavLink>
         </div>
 
@@ -61,6 +88,7 @@ function HeaderComponent() {
 
         {/* Drawer for Mobile */}
         <Drawer
+          className={styles?.drawerBodyClass}
           title="Menu"
           placement="right"
           onClose={closeDrawer}
@@ -69,15 +97,29 @@ function HeaderComponent() {
           <NavLink to="/" className={styles.drawerLink} onClick={closeDrawer}>
             Home
           </NavLink>
-          <NavLink to="/notifications" className={styles.drawerLink} onClick={closeDrawer}>
+          <Divider className={styles?.divider} />
+          {profile?.is_superuser && (<>
+          <NavLink
+            to="/notifications"
+            className={styles.drawerLink}
+            onClick={closeDrawer}
+          >
             Notifications
           </NavLink>
-          <NavLink to="/profile" className={styles.drawerLink} onClick={closeDrawer}>
+          <Divider className={styles?.divider} />
+
+          <NavLink
+            to="/profile"
+            className={styles.drawerLink}
+            onClick={closeDrawer}
+          >
             Profile
           </NavLink>
-          <Button type="text" icon={<LogoutOutlined />} onClick={logout}>
+          <Divider className={styles?.divider} /></>)}
+
+          <NavLink className={styles?.redText} onClick={logout}>
             Logout
-          </Button>
+          </NavLink>
         </Drawer>
       </div>
     </header>

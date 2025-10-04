@@ -133,6 +133,7 @@ const PublicProfilePage = () => {
         <div className={styles.sidebar}>
           <Card className={styles.profileCard}>
             <div className={styles.avatarContainer}>
+            
               <Avatar
                 src={profile?.profile_picture}
                 size={100}
