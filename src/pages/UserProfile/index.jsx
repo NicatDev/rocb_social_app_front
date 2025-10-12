@@ -8,6 +8,7 @@ import {
   Col,
   Button,
   App as AntdApp,
+  Input,
 } from "antd";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -23,7 +24,6 @@ const PublicProfilePage = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
 
-
   const fetchProfile = async () => {
     setLoading(true);
     try {
@@ -36,7 +36,7 @@ const PublicProfilePage = () => {
       );
       setProfile(res.data);
     } catch (err) {
-      message.error("Failed to fetch profile",err);
+      message.error("Failed to fetch profile", err);
     } finally {
       setLoading(false);
     }
@@ -51,22 +51,23 @@ const PublicProfilePage = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setPosts((prev) => [...prev, ...(res?.data?.results || [])]);
-        setNextPageUrl(res?.data?.next || null);
-
+      setNextPageUrl(res?.data?.next || null);
     } catch (err) {
-      message.error("Failed to fetch posts",err);
+      message.error("Failed to fetch posts", err);
     } finally {
       setPostsLoading(false);
     }
   };
 
   useEffect(() => {
-    if(username)fetchProfile();
+    if (username) fetchProfile();
   }, [username]);
-  
 
   useEffect(() => {
-    if(profile?.id)fetchPosts(`http://46.62.145.90:500/api/content/posts/?user=${profile.id}`);
+    if (profile?.id)
+      fetchPosts(
+        `http://46.62.145.90:500/api/content/posts/?user=${profile.id}`
+      );
   }, [profile]);
 
   if (loading || !profile)
@@ -92,9 +93,12 @@ const PublicProfilePage = () => {
             ].map((field) => (
               <Col xs={24} sm={12} key={field.key}>
                 <label>{field.label}</label>
-                <Card size="small" className={styles.infoCard}>
-                  {profile[field.key] || "-"}
-                </Card>
+                <Input
+                  disabled
+                  placeholder={field.label}
+                  value={profile[field.key] || ""}
+                  className={`${styles.commentInput} ${styles.disabled}`}
+                />
               </Col>
             ))}
           </Row>
@@ -133,11 +137,7 @@ const PublicProfilePage = () => {
         <div className={styles.sidebar}>
           <Card className={styles.profileCard}>
             <div className={styles.avatarContainer}>
-            
-              <Avatar
-                src={profile?.profile_picture}
-                size={100}
-              />
+              <Avatar src={profile?.profile_picture} size={100} />
             </div>
             <h2>
               {profile?.first_name} {profile?.last_name}

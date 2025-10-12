@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  DatePicker,
-  Upload,
-  Row,
-  Col,
-  Steps,
-} from "antd";
+import { Form, Input, Button, DatePicker, Upload, Row, Col, Steps } from "antd";
 import { App as AntdApp } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +14,7 @@ function RegisterPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-  const { message } = AntdApp.useApp(); 
+  const { message } = AntdApp.useApp();
   const [form] = Form.useForm();
 
   const next = async () => {
@@ -80,7 +71,7 @@ function RegisterPage() {
         // field-specific errors array-lər şəklində gəlir
         Object.entries(errors).forEach(([field, messages]) => {
           messages.forEach((msg) => {
-            console.log(msg,field)
+            console.log(msg, field);
             message.error(`${field}: ${msg}`);
           });
         });

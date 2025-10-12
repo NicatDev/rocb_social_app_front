@@ -93,3 +93,6 @@ body, #root {
 .ant-card-body{
   width: 100%;
 }
+.ant-tabs-nav-wrap{
+  background-color: white;
+}

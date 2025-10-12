@@ -33,7 +33,8 @@ const ProfilePage = () => {
       setPosts((prev) => {
         const merged = [...prev, ...res?.data?.results];
         const unique = merged.filter(
-          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+          (post, index, self) =>
+            index === self.findIndex((p) => p.id === post.id)
         );
         return unique;
       });

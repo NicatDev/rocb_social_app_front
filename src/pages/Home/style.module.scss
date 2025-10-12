@@ -169,6 +169,16 @@
   display: flex;
   flex-direction: column;
   padding: 0;
+ 
+}
+
+.listItemMain{
+  transition: all 0.3s ease;
+ &:hover {
+    transform: scale(1.0); // 2% böyüsün
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); // shadow əlavə olunsun
+    cursor: pointer;
+  }
 }
 
 .postHeader {
@@ -230,5 +240,43 @@
   .postHeader{
     gap:20px;
     justify-content: center;
+  }
+}
+.modalView {
+  // Transparent overlay (modal arxa planını şəffaf etmək)
+:global(.ant-modal-content)  {
+    background: rgba(255, 255, 255, 0.9); // light transparency, istəsən 0.8 də edə bilərsən
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 0px !important;
+  }
+
+  // X düyməsi (close button) hündürlük, rəng və hover
+  .ant-modal-close {
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+
+    .ant-modal-close-x {
+      font-size: 20px;
+      color: #333;
+
+      &:hover {
+        color: #1677ff; // hover rəngi
+      }
+    }
+  }
+
+  // Modal overlay (arxa planın ümumi şəffaflığı)
+  .ant-modal-mask {
+    background: rgba(0, 0, 0, 0.4); // qara yarım şəffaf fon
+  }
+
+  // Scroll üçün body maksimal hündürlük
+:global(.ant-modal-body)  {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 0px !important;
   }
 }

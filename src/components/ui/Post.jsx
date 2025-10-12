@@ -29,7 +29,7 @@ const Post = ({ post }) => {
   const { message } = AntdApp.useApp();
   const { profile } = useAuth();
   const navigate = useNavigate();
-
+ 
   const toggleLike = async () => {
     const previousLiked = liked;
     const previousCount = likeCount;
@@ -39,7 +39,9 @@ const Post = ({ post }) => {
 
     try {
       if (!previousLiked) {
-        const response = await axiosInstance.post("/content/likes/", { post: post.id });
+        const response = await axiosInstance.post("/content/likes/", {
+          post: post.id,
+        });
         setLiked(response.data.id);
         message.success("Liked successfully");
       } else {
@@ -132,7 +134,9 @@ const Post = ({ post }) => {
         actions={[
           <div className={styles.commentDiv} key="comments">
             <List
-              className={`${!comments.length && styles.noComment} ${styles.commentList}`}
+              className={`${!comments.length && styles.noComment} ${
+                styles.commentList
+              }`}
               itemLayout="horizontal"
               dataSource={comments.slice(0, visibleComments)}
               renderItem={(item) => (
@@ -198,7 +202,11 @@ const Post = ({ post }) => {
                 onPressEnter={handleSendComment}
                 disabled={loading}
                 suffix={
-                  <Button type="link" onClick={handleSendComment} loading={loading}>
+                  <Button
+                    type="link"
+                    onClick={handleSendComment}
+                    loading={loading}
+                  >
                     Send
                   </Button>
                 }

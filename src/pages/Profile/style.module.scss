@@ -118,3 +118,8 @@
   display: flex;
   justify-content: center;
 }
+.disabled{
+  background-color: white !important;
+  color: rgb(110, 110, 110) !important;
+  cursor: initial !important;
+}

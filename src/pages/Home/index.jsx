@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Card, Divider, List, Typography } from "antd";
+import { Avatar, Button, Card, Divider, List, Modal, Typography } from "antd";
 import {
   UserOutlined,
   LinkedinOutlined,
@@ -25,7 +25,19 @@ const Home = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const { message } = AntdApp.useApp();
   const { profile } = useAuth();
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
+
+  const handleItemClick = (item) => {
+    setSelectedPost(item);
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSelectedPost(null);
+  };
 
   const fetchTopPosts = async (url = "/content/top") => {
     const accessToken = localStorage.getItem("accessToken");
@@ -101,8 +113,6 @@ const Home = () => {
               {profile?.position}
             </Text>
           </Card>
-
-        
         </div>
 
         {/* Main Content */}
@@ -142,7 +152,7 @@ const Home = () => {
               <Button shape="circle" icon={<TwitterOutlined />} />
             </div>
           </Card>
-            <Card className={styles.userCard}>
+          <Card className={styles.userCard}>
             <Title level={4} style={{ margin: "0" }}>
               Most liked
             </Title>
@@ -152,7 +162,7 @@ const Home = () => {
               size="large"
               dataSource={topPosts}
               renderItem={(item) => (
-                <List.Item key={item.title}>
+                <List.Item className={styles.listItemMain} key={item.id} onClick={() => handleItemClick(item)}>
                   <div className={styles.listItem}>
                     <div className={styles.postHeader}>
                       <Avatar size={40} src={item?.image} />
@@ -179,6 +189,20 @@ const Home = () => {
           </Card>
         </div>
       </div>
+      <Modal
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+        width={700}
+        className={styles.modalView} // öz class-ımız
+        centered // modal ekranın ortasında açılsın
+        destroyOnClose={true} // bağlayanda state təmizlənsin
+        bodyStyle={{ maxHeight: "80vh", overflowY: "auto", padding: "24px" }} // scroll
+      >
+        {selectedPost && (
+          <Post key={selectedPost.id + "-"} post={selectedPost} />
+        )}
+      </Modal>
     </div>
   );
 };

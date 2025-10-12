@@ -29,6 +29,7 @@ const PostApprovePage = () => {
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
 
+
   const showImageModal = (src) => {
     setSelectedImage(src);
     setImageModalVisible(true);
@@ -37,7 +38,9 @@ const PostApprovePage = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const { data } = await axiosInstance.get("/content/posts/?is_active=null");
+      const { data } = await axiosInstance.get(
+        "/content/posts/?is_active=null"
+      );
       setPosts(data.results || []);
     } catch (error) {
       console.error(error);
@@ -56,7 +59,9 @@ const PostApprovePage = () => {
       await axiosInstance.patch(`/content/posts/${id}/`, {
         is_active: action === "approve",
       });
-      message.success(action === "approve" ? "Post approved!" : "Post rejected!");
+      message.success(
+        action === "approve" ? "Post approved!" : "Post rejected!"
+      );
       setPosts((prev) => prev.filter((p) => p.id !== id));
     } catch (error) {
       console.error(error);
@@ -154,7 +159,11 @@ const PostApprovePage = () => {
                       title="Approve this post?"
                       onConfirm={() => handleAction(post.id, "approve")}
                     >
-                      <Button type="primary" shape="circle" icon={<CheckOutlined />} />
+                      <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<CheckOutlined />}
+                      />
                     </Popconfirm>
                   </div>
                 </div>
