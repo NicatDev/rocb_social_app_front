@@ -38,9 +38,6 @@ export const routesConfig = [
   {
     path: "/profile",
     element: <MainLayout />,
-    element: (
-        <MainLayout />
-    ),
     children: [{ index: true, element: <Profile /> }],
   },
 ];
