@@ -22,7 +22,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
-const Post = ({ post }) => {
+const Post = ({ post, isInModal }) => {
   const [filePreview, setFilePreview] = useState(null);
   const [moreContent, setMoreContent] = useState(false);
   const [visibleComments, setVisibleComments] = useState(1);
@@ -110,7 +110,7 @@ const Post = ({ post }) => {
 
   if (!post || !post.user) return null;
 
-  const handleDelete = async (postId) => {
+  const handleDelete = async () => {
     try {
       const token = localStorage.getItem("accessToken");
 
@@ -162,10 +162,10 @@ const Post = ({ post }) => {
         extra={
           <div className={styles?.extra}>
             <Text type="secondary">{formattedDate}</Text>
-            <DeleteFilled
+           {post.user == profile.username && !isInModal && <DeleteFilled
               onClick={handleDelete}
               className={styles?.trashIcon}
-            />
+            />}
           </div>
         }
         actions={[

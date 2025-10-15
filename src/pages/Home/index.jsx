@@ -200,7 +200,7 @@ const Home = () => {
         bodyStyle={{ maxHeight: "80vh", overflowY: "auto", padding: "24px" }} // scroll
       >
         {selectedPost && (
-          <Post key={selectedPost.id + "-"} post={selectedPost} />
+          <Post post={selectedPost} isInModal={true} />
         )}
       </Modal>
     </div>
