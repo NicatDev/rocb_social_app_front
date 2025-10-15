@@ -68,7 +68,7 @@ const Post = ({ post, isInModal }) => {
     if (!post?.created_date) return "";
     return new Date(post.created_date).toLocaleDateString("en-GB", {
       day: "2-digit",
-      month: "long",
+      month: "short",
       year: "numeric",
     });
   }, [post.created_date]);
