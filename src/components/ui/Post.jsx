@@ -11,7 +11,12 @@ import {
   Divider,
   App as AntdApp,
 } from "antd";
-import { HeartOutlined, HeartFilled, FileOutlined } from "@ant-design/icons";
+import {
+  HeartOutlined,
+  HeartFilled,
+  FileOutlined,
+  DeleteFilled,
+} from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -26,10 +31,11 @@ const Post = ({ post }) => {
   const [loading, setLoading] = useState(false);
   const [liked, setLiked] = useState(post?.liked_by_user);
   const [likeCount, setLikeCount] = useState(post?.like_count);
+  const [isDeleted, setIsDeleted] = useState(false);
   const { message } = AntdApp.useApp();
   const { profile } = useAuth();
   const navigate = useNavigate();
- 
+
   const toggleLike = async () => {
     const previousLiked = liked;
     const previousCount = likeCount;
@@ -58,10 +64,14 @@ const Post = ({ post }) => {
     }
   };
 
-  const formattedDate = useMemo(
-    () => new Date(post.created_date).toLocaleString(),
-    [post.created_date]
-  );
+  const formattedDate = useMemo(() => {
+    if (!post?.created_date) return "";
+    return new Date(post.created_date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  }, [post.created_date]);
 
   const truncateContent = (content, length = 300) =>
     content?.length > length ? `${content.slice(0, length)}...` : content || "";
@@ -100,8 +110,27 @@ const Post = ({ post }) => {
 
   if (!post || !post.user) return null;
 
+  const handleDelete = async (postId) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      await axiosInstance.delete(
+        `http://46.62.145.90:500/api/content/posts/${post.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsDeleted(true);
+      message.success("Post deleted successfully!");
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to delete post.");
+    }
+  };
   return (
-    <>
+    <div className={isDeleted && styles?.deleted}>
       <Modal
         className={styles.Modal}
         open={!!filePreview}
@@ -130,7 +159,15 @@ const Post = ({ post }) => {
             {post.user}
           </Text>
         }
-        extra={<Text type="secondary">{formattedDate}</Text>}
+        extra={
+          <div className={styles?.extra}>
+            <Text type="secondary">{formattedDate}</Text>
+            <DeleteFilled
+              onClick={handleDelete}
+              className={styles?.trashIcon}
+            />
+          </div>
+        }
         actions={[
           <div className={styles.commentDiv} key="comments">
             <List
@@ -252,7 +289,7 @@ const Post = ({ post }) => {
           </div>
         )}
       </Card>
-    </>
+    </div>
   );
 };
 

@@ -139,7 +139,7 @@ const Home = () => {
 
         {/* Right Sidebar */}
         <div className={styles.sidebarRight}>
-          <Card className={styles.socialCard}>
+          {/* <Card className={styles.socialCard}>
             <Title
               level={5}
               style={{ marginBottom: 15, marginTop: 2, textAlign: "center" }}
@@ -151,7 +151,7 @@ const Home = () => {
               <Button shape="circle" icon={<LinkedinOutlined />} />
               <Button shape="circle" icon={<TwitterOutlined />} />
             </div>
-          </Card>
+          </Card> */}
           <Card className={styles.userCard}>
             <Title level={4} style={{ margin: "0" }}>
               Most liked

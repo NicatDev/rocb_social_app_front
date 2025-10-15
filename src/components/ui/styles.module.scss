@@ -114,3 +114,20 @@ gap: 10px;
 .username{
   cursor: pointer;
 }
+.extra{
+  display: flex;
+  align-items: center;
+  gap:8px
+}
+.trashIcon{
+  color: red;
+  cursor: pointer;
+  font-size: 17px;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  &:hover{
+    scale: 1.16;
+  }
+}
+.deleted{
+  display: none;
+}
