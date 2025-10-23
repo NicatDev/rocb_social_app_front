@@ -3,7 +3,6 @@ import styles from "./style.module.scss";
 import { useAuth } from "../../context/AuthContext";
 
 function LoginPage() {
-
   const { onFinish } = useAuth();
 
   return (
@@ -19,7 +18,7 @@ function LoginPage() {
           <Form.Item
             label="Username"
             name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input placeholder="Username" />
           </Form.Item>
@@ -27,13 +26,17 @@ function LoginPage() {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password placeholder="Password" />
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className={styles.loginButton}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className={styles.loginButton}
+            >
               Login
             </Button>
           </Form.Item>

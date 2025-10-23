@@ -1,4 +1,4 @@
-import React, {
+import  {
   createContext,
   useContext,
   useEffect,
@@ -8,6 +8,7 @@ import React, {
 import { App as AntdApp } from "antd";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/config/Axios";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -49,13 +50,14 @@ export const AuthProvider = ({ children }) => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/account/login/", values);
+      const response = await axios.post("http://46.62.145.90:500/api/account/login/", values);
 
       if (response?.data?.access) {
         localStorage.setItem("accessToken", response.data.access);
         localStorage.setItem("refreshToken", response.data?.refresh);
       }
       message.success("Login successful!");
+
       navigate("/");
       fetchProfile();
     } catch (error) {
