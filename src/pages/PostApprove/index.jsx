@@ -9,6 +9,7 @@ import {
   message,
   Popconfirm,
   Modal,
+  Pagination,
 } from "antd";
 import {
   FileOutlined,
@@ -19,29 +20,32 @@ import {
 import axiosInstance from "@/config/Axios";
 import styles from "./style.module.scss";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const PostApprovePage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-
 
   const showImageModal = (src) => {
     setSelectedImage(src);
     setImageModalVisible(true);
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (pageNum = 1) => {
     try {
       setLoading(true);
       const { data } = await axiosInstance.get(
-        "/content/posts/?is_active=null"
+        `/content/posts/?is_active=null&page=${pageNum}`
       );
+
       setPosts(data.results || []);
+      setTotal(data.count || 0);
     } catch (error) {
       console.error(error);
       message.error("Failed to fetch posts!");
@@ -51,8 +55,8 @@ const PostApprovePage = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    fetchPosts(page);
+  }, [page]);
 
   const handleAction = async (id, action) => {
     try {
@@ -62,7 +66,7 @@ const PostApprovePage = () => {
       message.success(
         action === "approve" ? "Post approved!" : "Post rejected!"
       );
-      setPosts((prev) => prev.filter((p) => p.id !== id));
+      fetchPosts(page);
     } catch (error) {
       console.error(error);
       message.error("Failed to update post status!");
@@ -85,95 +89,106 @@ const PostApprovePage = () => {
           No pending posts 🎉
         </Text>
       ) : (
-        <List
-          itemLayout="horizontal"
-          dataSource={posts}
-          renderItem={(post) => (
-            <div key={post.id}>
-              <List.Item className={styles.postItem}>
-                <div className={styles.contentWrapper}>
-                  {post.image && (
-                    <Avatar
-                      src={post.image}
-                      shape="square"
-                      size={64}
-                      className={styles.avatar}
-                      onClick={() => showImageModal(post.image)}
-                      style={{ cursor: "pointer" }}
-                    />
-                  )}
-                  <div className={styles.postInfo}>
-                    <Text className="postUser">
-                      {post.user} {post.id}
-                    </Text>
-                    <Text className="postCreated">
-                      {new Date(post.created_date).toLocaleDateString("en-US", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </Text>
+        <>
+          <List
+            itemLayout="horizontal"
+            dataSource={posts}
+            renderItem={(post) => (
+              <div key={post.id}>
+                <List.Item className={styles.postItem}>
+                  <div className={styles.contentWrapper}>
+                    {post.image && (
+                      <Avatar
+                        src={post.image}
+                        shape="square"
+                        size={64}
+                        className={styles.avatar}
+                        onClick={() => showImageModal(post.image)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    )}
+                    <div className={styles.postInfo}>
+                      <Text className="postUser">
+                        {post.user} {post.id}
+                      </Text>
+                      <Text className="postCreated">
+                        {new Date(post.created_date).toLocaleDateString("en-US", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </Text>
+                    </div>
                   </div>
-                </div>
 
-                <div className={styles.actions}>
-                  <div className={styles.buttonDiv}>
-                    {post.file && (
-                      <Tooltip title="Open file">
+                  <div className={styles.actions}>
+                    <div className={styles.buttonDiv}>
+                      {post.file && (
+                        <Tooltip title="Open file">
+                          <a
+                            href={post.file}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <FileOutlined className={styles.fileIcon} />
+                          </a>
+                        </Tooltip>
+                      )}
+                      <Tooltip title="Read content">
                         <a
-                          href={post.file}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={() => showContentModal(post.content)}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "20px",
+                            color: "#12579e",
+                            cursor: "pointer",
+                          }}
                         >
-                          <FileOutlined className={styles.fileIcon} />
+                          <ReadOutlined />
                         </a>
                       </Tooltip>
-                    )}
-                    <Tooltip title="Read content">
-                      <a
-                        onClick={() => showContentModal(post.content)}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "20px",
-                          color: "#12579e",
-                          cursor: "pointer",
-                          transition: "color 0.2s ease",
-                        }}
+                    </div>
+                    <div className={styles.buttonDiv}>
+                      <Popconfirm
+                        title="Reject this post?"
+                        onConfirm={() => handleAction(post.id, "reject")}
                       >
-                        <ReadOutlined />
-                      </a>
-                    </Tooltip>
+                        <Button danger shape="circle" icon={<CloseOutlined />} />
+                      </Popconfirm>
+                      <Popconfirm
+                        title="Approve this post?"
+                        onConfirm={() => handleAction(post.id, "approve")}
+                      >
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon={<CheckOutlined />}
+                        />
+                      </Popconfirm>
+                    </div>
                   </div>
-                  <div className={styles.buttonDiv}>
-                    <Popconfirm
-                      title="Reject this post?"
-                      onConfirm={() => handleAction(post.id, "reject")}
-                    >
-                      <Button danger shape="circle" icon={<CloseOutlined />} />
-                    </Popconfirm>
-                    <Popconfirm
-                      title="Approve this post?"
-                      onConfirm={() => handleAction(post.id, "approve")}
-                    >
-                      <Button
-                        type="primary"
-                        shape="circle"
-                        icon={<CheckOutlined />}
-                      />
-                    </Popconfirm>
-                  </div>
-                </div>
-              </List.Item>
-            </div>
-          )}
-        />
+                </List.Item>
+              </div>
+            )}
+          />
+
+          {/* ✅ Pagination */}
+          <div className={styles?.paginationDiv}>
+          <Pagination
+            current={page}
+            total={total}
+            pageSize={6}
+            onChange={(value) => setPage(value)}
+            style={{ textAlign: "center", marginTop: 20 }}
+          /></div>
+        </>
       )}
 
-      {/* Modal */}
+      {/* Content Modal */}
       <Modal
         title="Post Content"
         open={modalVisible}
